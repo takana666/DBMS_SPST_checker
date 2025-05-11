@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDBMS_Speed & Stamina checker（テスト中）</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    label { display: block; margin-top: 10px; }
+    .row { display: flex; gap: 10px; margin-top: 10px; }
+    select { flex: 1; margin-top: 5px; }
+    .result, .result-abmid { padding: 10px; border: 1px solid #ccc; border-radius: 4px; margin-top: 15px; max-width: 600px; }
+    .range { margin-bottom: 12px; }
+    .section-title { font-weight: bold; margin-top: 12px; }
+    .divider { max-width: 620px; margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>DBMS_Speed & Stamina checker（テスト中）</h1>
+
+  <h5>リリース日：2025/05/12<br>
+  バグ確認中のため、不具合見つけたら連絡ください</h5>
+
+  <label for="commentA">上段コメA:</label>
+  <select id="commentA">
+    <option value="">--選択してください--</option>
+    <option value="A1">計り知れない素質を感じます</option>
+    <option value="A2">スピードタイプの素晴らしい馬ですね</option>
+    <option value="A3">スタミナタイプの素晴らしい馬ですね</option>
+    <option value="A4">これは凄い素質の馬ですね</option>
+  </select>
+
+  <label for="commentB">上段コメB:</label>
+  <select id="commentB">
+    <option value="">--選択してください--</option>
+    <option value="B1">常識では測れないような馬ですね…一瞬後光が射したような…</option>
+    <option value="B2">数多くの馬をみてきましたが時代を築くこと間違いないです</option>
+    <option value="B3">海外でも活躍して時代を代表する馬になるかもしれません</option>
+    <option value="B4">将来は海外も視野に入れたほうが良いでしょう</option>
+  </select>
+
+  <label for="commentMid">中段コメタイプ:</label>
+  <select id="commentMid">
+    <option value="">--選択してください--</option>
+    <option value="speedType">スピードタイプ (Speed > Stamina)</option>
+    <option value="staminaType">スタミナタイプ (Speed < Stamina)</option>
+    <option value="balanceType">バランスタイプ (Speed = Stamina)</option>
+  </select>
+
+  <div class="row">
+    <div>
+      <label for="speedVal">スピード値 (A–E):</label>
+      <select id="speedVal">
+        <option value="">--選択してください--</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+      </select>
+    </div>
+    <div>
+      <label for="staminaVal">スタミナ値 (A–E):</label>
+      <select id="staminaVal">
+        <option value="">--選択してください--</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+      </select>
+    </div>
+  </div>
+
+  <h4>上段コメと中段コメから推定されるスピスタ範囲</h4>
+  <div class="result-abmid" id="outputABMid">上段・中段コメント条件の共通範囲がここに表示されます。</div>
+  <hr class="divider">
+
+  <label for="memory">メモリ:</label>
+  <select id="memory">
+    <option value="">--選択してください--</option>
+    <option value="M1a">1 一息（75-79%）</option>
+    <option value="M1b">1 まだ先（70-74%）</option>
+    <option value="M2">2（60-69%）</option>
+    <option value="M3">3（50-59%）</option>
+    <option value="M4">4（40-49%）</option>
+    <option value="M5">5（30-39%）</option>
+    <option value="M6">6（20-29%）</option>
+  </select>
+
+  <label for="category">下段コメント:</label>
+  <select id="category">
+    <option value="">--選択してください--</option>
+    <option>スピードでこの馬が</option>
+    <option>既にG1で勝ち負け</option>
+    <option>瞬発力が不安</option>
+    <option>勝ち負け</option>
+    <option>G1現実的</option>
+    <option>G1にも手が届く</option>
+    <option>G1相手次第</option>
+    <option>距離次第</option>
+    <option>スタミナいまひとつ</option>
+    <option>スピードスタミナいまひとつ</option>
+    <option>スピードいまひとつ</option>
+    <option>今の馬のスピード</option>
+    <option>まあG1</option>
+    <option>スタ要求</option>
+    <option>スピ欠け</option>
+  </select>
+
+  <div class="row">
+    <div>
+      <label for="speedInit">スピード初期値 (A–E):</label>
+      <select id="speedInit">
+        <option value="">--選択してください--</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+      </select>
+    </div>
+    <div>
+      <label for="staminaInit">スタミナ初期値 (A–E):</label>
+      <select id="staminaInit">
+        <option value="">--選択してください--</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+      </select>
+    </div>
+  </div>
+
+  <h4>メモリ・下段コメント・スピスタ初期値における現状値と推定されるスピスタ範囲</h4>
+  <div class="result" id="output">メモリ・下段コメント・初期値条件による現在値と推定値がここに表示されます</div>
+  <hr class="divider">
+
+  <h4>全コメントから推定されるスピスタ範囲</h4>
+  <div class="result" id="outputAllComments">全ての条件結果がここに表示</div>
+
+  <script>
+    const mapA = {
+      A1: { speed:[120,Infinity], stamina:[120,Infinity] },
+      A2: { speed:[120,Infinity], stamina:[110,119] },
+      A3: { speed:[110,119], stamina:[120,Infinity] },
+      A4: [
+        { speed:[81,Infinity], stamina:[81,109] },
+        { speed:[81,109], stamina:[81,Infinity] },
+        { speed:[110,119], stamina:[110,119] }
+      ]
+    };
+    const mapB = {
+      B1: { sum:[275,Infinity] },
+      B2: { sum:[250,274] },
+      B3: { sum:[230,249] },
+      B4: { sum:[180,229] }
+    };
+    const compareMid = {
+      speedType: (s,st) => s > st,
+      staminaType: (s,st) => s < st,
+      balanceType: (s,st) => s === st
+    };
+    const categoryMap = {
+      "スピードでこの馬が": [{speed:[150,Infinity],stamina:[0,Infinity]}],
+      "既にG1で勝ち負け": [{speed:[120,149],stamina:[0,Infinity]}],
+      "瞬発力が不安": [{speed:[100,119],stamina:[90,Infinity]}],
+      "勝ち負け": [{speed:[100,119],stamina:[0,89]}],
+      "G1現実的": [{speed:[70,99],stamina:[90,Infinity]},{speed:[90,99],stamina:[70,89]}],
+      "G1にも手が届く": [{speed:[0,69],stamina:[90,Infinity]},{speed:[90,99],stamina:[0,69]}],
+      "G1相手次第": [{speed:[70,79],stamina:[80,89]},{speed:[80,90],stamina:[70,89]}],
+      "距離次第": [{speed:[80,89],stamina:[0,69]},{speed:[0,79],stamina:[80,89]}],
+      "スタミナいまひとつ": [{speed:[70,79],stamina:[60,79]}],
+      "スピードスタミナいまひとつ": [{speed:[70,79],stamina:[0,59]}],
+      "スピードいまひとつ": [{speed:[60,69],stamina:[70,79]}],
+      "今の馬のスピード": [{speed:[0,54],stamina:[70,79]}],
+      "まあG1": [{speed:[60,69],stamina:[60,69]}],
+      "スタ要求": [{speed:[60,69],stamina:[0,59]}],
+      "スピ欠け": [{speed:[0,59],stamina:[0,69]}]
+    };
+    const gradeMap = { A:[100,Infinity], B:[85,99], C:[70,84], D:[55,69], E:[0,54] };
+    const memoryMap = { M1a:[75,79], M1b:[70,74], M2:[60,69], M3:[50,59], M4:[40,49], M5:[30,39], M6:[20,29] };
+
+    function intersect(a,b){const lo=Math.max(a[0],b[0]),hi=Math.min(a[1],b[1]);return lo<=hi?[lo,hi]:null;}
+
+    let dispSpMin,dispSpMax,tMinAll,tMaxAll;
+
+    function updateABMid(){
+      const a=document.getElementById('commentA').value;
+      const b=document.getElementById('commentB').value;
+      const m=document.getElementById('commentMid').value;
+      const spVal=document.getElementById('speedVal').value;
+      const stVal=document.getElementById('staminaVal').value;
+      const condA=mapA[a],condB=mapB[b],comp=compareMid[m];
+      const gS=spVal?gradeMap[spVal]:[0,200],gT=stVal?gradeMap[stVal]:[0,200];
+      const outDiv=document.getElementById('outputABMid');
+      if(!condA){outDiv.innerHTML='<p>A が未選択です。</p>';return;}
+      let valid=[];const rangesA=Array.isArray(condA)?condA:[condA];
+      rangesA.forEach(rA=>{
+        const sMinA=rA.speed[0],sMaxA=Math.min(rA.speed[1],200);
+        const tMinA=rA.stamina[0],tMaxA=Math.min(rA.stamina[1],200);
+        for(let s=sMinA;s<=sMaxA;s++){
+          if(s<gS[0]||s>gS[1])continue;
+          for(let st=tMinA;st<=tMaxA;st++){
+            if(st<gT[0]||st>gT[1])continue;
+            let ok=true;
+            if(condB){const sum=s+st;if(sum<condB.sum[0]||sum>condB.sum[1])ok=false;}
+            if(ok&&comp&&!comp(s,st))ok=false;
+            if(ok)valid.push({s,st});
+          }
+        }
+      });
+      if(valid.length===0){outDiv.innerHTML='<p>該当する範囲がありません。</p>';return;}
+      const sVals=valid.map(v=>v.s),tVals=valid.map(v=>v.st);
+      dispSpMin=Math.min(...sVals);dispSpMax=Math.max(...sVals);
+      tMinAll=Math.min(...tVals);tMaxAll=Math.max(...tVals);
+      outDiv.innerHTML=
+        `<div class="section-title">上段A・B・中段＋グレード共通範囲</div>`+
+        `<div class="range"><strong>スピード:</strong> ${dispSpMin} ～ ${dispSpMax}</div>`+
+        `<div class="range"><strong>スタミナ:</strong> ${tMinAll} ～ ${tMaxAll}</div>`;
+    }
+
+    function computeRanges(){
+      const cat=document.getElementById('category').value;
+      const spG=document.getElementById('speedInit').value;
+      const stG=document.getElementById('staminaInit').value;
+      if(!cat||!spG||!stG)return[];
+      const cr=categoryMap[cat]||[];const spI=gradeMap[spG],stI=gradeMap[stG];
+      let out=[];cr.forEach(({speed:spC,stamina:stC})=>{
+        const spR=intersect(spC,spI),stR=intersect(stC,stI);
+        if(spR&&stR)out.push({curSpeed:spR,curStamina:stR});
+      });return out;
+    }
+
+    function updateOutput(){
+      updateABMid();
+      const ranges=computeRanges();
+      const mem=memoryMap[document.getElementById('memory').value];
+      const outDiv=document.getElementById('output');
+      if(ranges.length===0){outDiv.innerHTML='<p>下段条件に該当なし。</p>';return;}
+      let html='<div class="section-title">現状のスピード・スタミナ値</div>';
+      ranges.forEach(r=>{
+        html+=`<div class="range"><strong>現スピ:</strong> ${r.curSpeed[0]} ～ ${r.curSpeed[1]}<br/>`+
+              `<strong>現スタ:</strong> ${r.curStamina[0]} ～ ${r.curStamina[1]}</div>`;
+      });
+      html+='<div class="section-title">推定スピード・スタミナ値</div>';
+      let tempD=[];
+      if(mem){
+        const[pMin,pMax]=mem;let tableMax={},tableMin={};
+        for(let s=0;s<=500;s++){
+          let vMax=Math.floor(s*pMax/100),vMin=Math.floor(s*pMin/100);
+          (tableMax[vMax]=tableMax[vMax]||[]).push(s);
+          (tableMin[vMin]=tableMin[vMin]||[]).push(s);
+        }
+        ranges.forEach(r=>{
+          const maxCur=r.curSpeed[1],minCur=r.curSpeed[0];
+          const estSpMin=tableMin[maxCur]?Math.min(...tableMin[maxCur]):null;
+          const estSpMax=tableMax[minCur]?Math.max(...tableMax[minCur]):null;
+          const dMin=(estSpMin!==null&&estSpMax!==null)?Math.min(estSpMin,estSpMax):estSpMin;
+          const dMax=(estSpMin!==null&&estSpMax!==null)?Math.max(estSpMin,estSpMax):estSpMax;
+          tempD.push({dMin,dMax});
+          html+=`<div class="range"><strong>推定スピ:</strong> ${dMin} ～ ${dMax}</div>`;
+        });
+      }
+      ranges.forEach(r=>{
+        const estStMin=r.curStamina[0]*2,estStMax=r.curStamina[1]*2+1;
+        html+=`<div class="range"><strong>推定スタ:</strong> ${estStMin} ～ ${estStMax}</div>`;
+      });
+      outDiv.innerHTML=html;
+
+      const allDiv=document.getElementById('outputAllComments');
+      const a=document.getElementById('commentA').value;
+      const b=document.getElementById('commentB').value;
+      const m=document.getElementById('commentMid').value;
+      const spV=document.getElementById('speedVal').value;
+      const stV=document.getElementById('staminaVal').value;
+      const condA=mapA[a],condB=mapB[b],comp=compareMid[m];
+      const gS=spV?gradeMap[spV]:[0,200],gT=stV?gradeMap[stV]:[0,200];
+
+      let validAll=[];
+      if(tempD.length>0){
+        for(let s=tempD[0].dMin;s<=tempD[0].dMax;s++){
+          if(s<gS[0]||s>gS[1])continue;
+          for(let st=ranges[0].curStamina[0]*2;st<=ranges[0].curStamina[1]*2+1;st++){
+            if(st<gT[0]||st>gT[1])continue;
+            const rangesA=Array.isArray(condA)?condA:[condA];
+            if(!rangesA.some(rA=>s>=rA.speed[0]&&s<=rA.speed[1]&&st>=rA.stamina[0]&&st<=rA.stamina[1]))continue;
+            if(condB){const sum=s+st; if(sum<condB.sum[0]||sum>condB.sum[1])continue;}
+            if(comp&&!comp(s,st))continue;
+            validAll.push({s,st});
+          }
+        }
+      }
+      if(validAll.length===0){
+        allDiv.innerHTML='<p>全コメント条件に該当する範囲がありません。</p>';
+      } else {
+        const sVals=validAll.map(v=>v.s),tVals=validAll.map(v=>v.st);
+        const allSp=[Math.min(...sVals),Math.max(...sVals)];
+        const allSt=[Math.min(...tVals),Math.max(...tVals)];
+        allDiv.innerHTML=
+          `<div class="section-title">全コメントから推定されるスピード・スタミナ値</div>`+
+          `<div class="range"><strong>推定スピ:</strong>${allSp[0]} ～ ${allSp[1]}</div>`+
+          `<div class="range"><strong>推定スタ:</strong>${allSt[0]} ～ ${allSt[1]}</div>`;
+      }
+    }
+
+    ['commentA','commentB','commentMid','speedVal','staminaVal',
+     'memory','category','speedInit','staminaInit']
+     .forEach(id=>document.getElementById(id).addEventListener('change',updateOutput));
+  </script>
+</body>
+</html>"""
