@@ -19,6 +19,7 @@
   <h1>DBMS_Speed & Stamina checker（テスト中）</h1>
 
   <h5>リリース日：2025/05/12<br>
+  計算の都合上、一部の値の上限を200or199に制限しています<br>
   バグ確認中のため、不具合見つけたら連絡ください</h5>
 
   <label for="commentA">上段コメA:</label>
@@ -255,10 +256,10 @@
         }
         ranges.forEach(r=>{
           const maxCur=r.curSpeed[1],minCur=r.curSpeed[0];
-          const estSpMin=tableMin[maxCur]?Math.min(...tableMin[maxCur]):null;
-          const estSpMax=tableMax[minCur]?Math.max(...tableMax[minCur]):null;
-          const dMin=(estSpMin!==null&&estSpMax!==null)?Math.min(estSpMin,estSpMax):estSpMin;
-          const dMax=(estSpMin!==null&&estSpMax!==null)?Math.max(estSpMin,estSpMax):estSpMax;
+          const candMax = tableMax[minCur] || [];
+          const candMin = tableMin[maxCur] || [];
+          const dMin = candMax.length > 0 ? Math.min(...candMax) : null;
+          const dMax = candMin.length > 0 ? Math.max(...candMin) : null;
           tempD.push({dMin,dMax});
           html+=`<div class="range"><strong>推定スピ:</strong> ${dMin} ～ ${dMax}</div>`;
         });
@@ -299,7 +300,7 @@
         const allSp=[Math.min(...sVals),Math.max(...sVals)];
         const allSt=[Math.min(...tVals),Math.max(...tVals)];
         allDiv.innerHTML=
-          `<div class="section-title">全コメントから推定されるスピード・スタミナ値</div>`+
+          `<div class="section-title"></div>`+
           `<div class="range"><strong>推定スピ:</strong>${allSp[0]} ～ ${allSp[1]}</div>`+
           `<div class="range"><strong>推定スタ:</strong>${allSt[0]} ～ ${allSt[1]}</div>`;
       }
