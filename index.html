@@ -94,8 +94,6 @@
     <option value="">--選択してください--</option>
     <option>スピードでこの馬が</option>
     <option>既にG1で勝ち負け</option>
-    <option>瞬発力が不安</option>
-    <option>勝ち負け</option>
     <option>G1現実的</option>
     <option>G1にも手が届く</option>
     <option>G1相手次第</option>
@@ -166,10 +164,8 @@
     const categoryMap = {
       "スピードでこの馬が": [{speed:[150,200],stamina:[0,200]}],
       "既にG1で勝ち負け": [{speed:[120,149],stamina:[0,200]}],
-      "瞬発力が不安": [{speed:[100,119],stamina:[90,200]}],
-      "勝ち負け": [{speed:[100,119],stamina:[0,89]}],
-      "G1現実的": [{speed:[70,99],stamina:[90,200]},{speed:[90,200],stamina:[70,89]}],
-      "G1にも手が届く": [{speed:[0,69],stamina:[90,200]},{speed:[90,200],stamina:[0,69]}],
+      "G1現実的": [{speed:[70,99],stamina:[90,200]},{speed:[90,119],stamina:[70,89]}],
+      "G1にも手が届く": [{speed:[0,69],stamina:[90,200]},{speed:[90,119],stamina:[0,69]}],
       "G1相手次第": [{speed:[70,79],stamina:[80,89]},{speed:[80,90],stamina:[70,89]}],
       "距離次第": [{speed:[80,89],stamina:[0,69]},{speed:[0,79],stamina:[80,89]}],
       "スタミナいまひとつ": [{speed:[70,79],stamina:[60,79]}],
